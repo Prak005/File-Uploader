@@ -4,6 +4,7 @@ const passport = require("passport");
 const session = require("express-session");
 const app = express();
 const authRoutes = require("./routes/authRoutes");
+const folderRoutes = require("./routes/folderRoutes");
 require("./config/passport");
 
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes);
+app.use("/folders", folderRoutes);
 
 app.get('/', (req, res) => {
     res.send("Server running");
