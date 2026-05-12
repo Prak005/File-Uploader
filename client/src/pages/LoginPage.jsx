@@ -1,9 +1,13 @@
-import {useState} from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import AuthContext from "../context/AuthContext";
 
 function LoginPage () {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const { setUser } = useContext(AuthContext);
+    const navigate = useNavigate();
     async function handleSubmit(e) {
         e.preventDefault();
         try{
@@ -11,7 +15,9 @@ function LoginPage () {
                 username,
                 password,
             });
-            console.log(response.data);
+            const userResponse = await api.get("/auth/me");
+            setUser(userResponse.data);
+            navigate("/");
         } catch(error) {
             console.log(error.response.data);
         }

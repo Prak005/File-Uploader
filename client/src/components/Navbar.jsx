@@ -16,12 +16,12 @@ function Navbar() {
     return (
         <nav className="p-4 border-b flex gap-4">
             {user && <p>{user.username}</p>}
-            {user && (
-                <button onClick={handleLogout}>Logout</button>
-            )}
             <Link to="/">Home</Link>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
+            {user && (
+                <button onClick={handleLogout}>Logout</button>
+            )}
         </nav>
     );
 }
