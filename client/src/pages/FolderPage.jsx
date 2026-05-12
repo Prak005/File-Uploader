@@ -36,6 +36,15 @@ function FolderPage() {
         }
     }
 
+    async function handleDelete(fileId){
+        try {
+            await api.delete(`/folders/files/${fileId}`);
+            await fetchFolder();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     if(!folder){
         return <p>Loading...</p>
     }
@@ -55,10 +64,13 @@ function FolderPage() {
                 </button>
             </form>
             {folder.files.map((file) => (
-                <div key={file.id}>
+                <div key={file.id} className="flex gap-2">
                     <a href={`http://localhost:3000/${file.path}`} target="_blank">
                         {file.name}
                     </a>
+                    <button onClick={() => handleDelete(file.id)}>
+                        Delete
+                    </button>
                 </div>
             ))}
         </div>

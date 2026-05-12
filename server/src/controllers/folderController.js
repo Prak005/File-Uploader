@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const fs = require("fs");
 
 async function createFolder(req, res) {
     try {
@@ -87,9 +88,43 @@ async function uploadFile(req, res) {
     }
 }
 
+async function deleteFile(req, res) {
+    try{
+        const file = await prisma.file.findFirst({
+            where: {
+                id: req.params.id,
+                folder: {
+                    userId: req.user.id,
+                },
+            },
+        });
+        if(!file) {
+            return res.status(404).json({
+                error: "File not found",
+            });
+        }
+        if(fs.existsSync(file.path)){
+            fs.unlinkSync(file.path);
+        }
+        await prisma.file.delete({
+            where:{
+                id: file.id,
+            },
+        });
+        res.json({
+            message: "File deleted",
+        });
+    } catch(error) {
+        res.status(500).json({
+            error: "Failed to delete file",
+        });
+    }
+}
+
 module.exports = {
     createFolder,
     getFolders,
     getFolder,
     uploadFile,
+    deleteFile,
 }
