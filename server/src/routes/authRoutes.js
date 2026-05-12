@@ -11,4 +11,8 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
     res.send("Logged in");
 });
 
+router.get("/me", authController.me);
+
+router.post("/logout", authController.logout);
+
 module.exports = router;

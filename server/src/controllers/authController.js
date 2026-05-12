@@ -21,7 +21,22 @@ async function registerPost(req, res) {
     }
 }
 
+function me(req, res) {
+    res.json(req.user);
+}
+
+function logout(req, res, next) {
+    req.logout((error) => {
+        if(error) {
+            return next(error);
+        }
+        res.send("Logged out");
+    });
+}
+
 module.exports = {
     registerGet,
     registerPost,
-}
+    me,
+    logout,
+};
