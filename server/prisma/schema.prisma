@@ -28,5 +28,5 @@ model File {
   path      String
   createdAt DateTime  @default(now())
   folderId  String
-  folder    Folder    @relation(fields:[folderId], references: [id])
+  folder    Folder    @relation(fields:[folderId], references: [id], onDelete: Cascade)
 }

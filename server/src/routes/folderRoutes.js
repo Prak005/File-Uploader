@@ -10,5 +10,6 @@ router.post("/", isAuthenticated, folderController.createFolder);
 router.get("/:id", isAuthenticated, folderController.getFolder);
 router.post("/:id/upload", isAuthenticated, upload.single("file"), folderController.uploadFile);
 router.delete("/files/:fileId", isAuthenticated, folderController.deleteFile);
+router.delete("/:id", isAuthenticated, folderController.deleteFolder);
 
 module.exports = router;

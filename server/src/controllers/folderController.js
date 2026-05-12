@@ -121,10 +121,48 @@ async function deleteFile(req, res) {
     }
 }
 
+async function deleteFolder(req, res) {
+    try{
+        const folder = await prisma.folder.findFirst({
+            where:{
+                id: req.params.id,
+                userId: req.user.id,
+            },
+            include: {
+                files: true,
+            },
+        });
+        if(!folder){
+            return res.status(404).json({
+                error:"Folder not found",
+            });
+        }
+        for (const file of folder.files) {
+            if(fs.existsSync(file.path)){
+                fs.unlinkSync(file.path);
+            }
+        }
+        await prisma.folder.delete({
+            where:{
+                id: folder.id,
+            },
+        });
+        res.json({
+            message:"Folder Deleted",
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error:"Failed to delete folder",
+        });
+    }
+}
+
 module.exports = {
     createFolder,
     getFolders,
     getFolder,
     uploadFile,
     deleteFile,
+    deleteFolder,
 }
