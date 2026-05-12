@@ -7,13 +7,18 @@ function registerGet(req, res) {
 async function registerPost(req, res) {
     const {username, password} = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    await prisma.user.create({
-        data: {
-            username,
-            password: hashedPassword,
-        },
-    });
-    res.send("User Created");
+    try{
+        await prisma.user.create({
+            data:{
+                username,
+                password: hashedPassword,
+            },
+        });
+        res.send("User Created");
+    } catch (error) {
+        console.log(error);
+        res.status(400).send("User already exists");
+    }
 }
 
 module.exports = {
