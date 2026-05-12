@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const { createFolder } = require("../controllers/folderController");
+const folderController = require("../controllers/folderController");
 const { isAuthenticated } = require("../middleware/authMiddleware");
 
-router.post("/", isAuthenticated, createFolder);
+router.get("/", isAuthenticated, folderController.getFolders);
+router.post("/", isAuthenticated, folderController.createFolder);
 
 module.exports = router;
