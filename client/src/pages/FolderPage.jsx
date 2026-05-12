@@ -6,15 +6,17 @@ function FolderPage() {
     const { id } = useParams();
     const [folder, setFolder] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
-    useEffect(() => {
-        async function fetchFolder() {
-            try{
-                const response = await api.get(`/folders/${id}`);
-                setFolder(response.data);
-            }catch(error) {
-                console.log(error);
-            }
+
+    async function fetchFolder() {
+        try{
+            const response = await api.get(`/folders/${id}`);
+            setFolder(response.data);
+        }catch(error) {
+            console.log(error);
         }
+    }
+
+    useEffect(() => {
         fetchFolder();
     }, [id]);
 
@@ -27,7 +29,8 @@ function FolderPage() {
         formData.append("file", selectedFile);
         try{
             await api.post(`/folders/${id}/upload`, formData);
-            alert("File Uploaded");
+            await fetchFolder();
+            setSelectedFile(null);
         }catch(error) {
             console.log(error);
         }
@@ -51,6 +54,13 @@ function FolderPage() {
                     Upload
                 </button>
             </form>
+            {folder.files.map((file) => (
+                <div key={file.id}>
+                    <a href={`http://localhost:3000/${file.path}`} target="_blank">
+                        {file.name}
+                    </a>
+                </div>
+            ))}
         </div>
     );
 }

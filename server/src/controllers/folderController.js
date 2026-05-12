@@ -42,6 +42,9 @@ async function getFolder(req, res) {
                 id: req.params.id,
                 userId: req.user.id,
             },
+            include: {
+                files: true,
+            },
         });
         if(!folder){
             return res.status(400).json({
