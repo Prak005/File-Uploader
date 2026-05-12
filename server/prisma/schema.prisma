@@ -19,4 +19,14 @@ model Folder {
   createdAt DateTime  @default(now())
   userId    String
   user      User      @relation(fields:[userId], references: [id])
+  files     File[]
+}
+
+model File {
+  id        String    @id @default(cuid())
+  name      String
+  path      String
+  createdAt DateTime  @default(now())
+  folderId  String
+  folder    Folder    @relation(fields:[folderId], references: [id])
 }

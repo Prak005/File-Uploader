@@ -56,8 +56,37 @@ async function getFolder(req, res) {
     }
 }
 
+async function uploadFile(req, res) {
+    try{
+        const folder = await prisma.folder.findFirst({
+            where:{
+                id: req.params.id,
+                userId: req.user.id,
+            },
+        });
+        if(!folder){
+            return res.status(404).json({
+                error:"Folder not found",
+            });
+        }
+        const file = await prisma.file.create({
+            data:{
+                name: req.file.originalname,
+                path: req.file.path,
+                folderId: folder.id,
+            },
+        });
+        res.json(file);
+    }catch(error){
+        res.status(500).json({
+            error:"Failed to upload file",
+        });
+    }
+}
+
 module.exports = {
     createFolder,
     getFolders,
     getFolder,
+    uploadFile,
 }
