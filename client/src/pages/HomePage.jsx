@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import { Link } from "react-router-dom";
 
 function HomePage() {
     const [folders, setFolders ] = useState([]);
@@ -45,7 +46,9 @@ function HomePage() {
             </form>
             {folders.map((folder) => (
                 <div key={folder.id}>
-                    {folder.name}
+                    <Link to={`/folders/${folder.id}`}>
+                        {folder.name}
+                    </Link>
                 </div>
             ))}
         </div>

@@ -6,5 +6,6 @@ const { isAuthenticated } = require("../middleware/authMiddleware");
 
 router.get("/", isAuthenticated, folderController.getFolders);
 router.post("/", isAuthenticated, folderController.createFolder);
+router.get("/:id", isAuthenticated, folderController.getFolder);
 
 module.exports = router;

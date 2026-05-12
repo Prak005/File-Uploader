@@ -35,7 +35,29 @@ async function getFolders(req, res) {
     }
 }
 
+async function getFolder(req, res) {
+    try {
+        const folder = await prisma.folder.findFirst({
+            where: {
+                id: req.params.id,
+                userId: req.user.id,
+            },
+        });
+        if(!folder){
+            return res.status(400).json({
+                error: "Folder Not Found",
+            });
+        }
+        res.json(folder);
+    }catch(error) {
+        res.status(500).json({
+            error: "Failed to fetch folder",
+        });
+    }
+}
+
 module.exports = {
     createFolder,
     getFolders,
+    getFolder,
 }
