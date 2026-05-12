@@ -22,7 +22,10 @@ async function registerPost(req, res) {
 }
 
 function me(req, res) {
-    res.json(req.user);
+    res.json({
+        id: req.user.id,
+        username: req.user.username,
+    });
 }
 
 function logout(req, res, next) {
