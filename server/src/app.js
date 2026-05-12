@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const authRoutes = require("./routes/authRoutes");
 
 app.use(express.json());
 
@@ -10,6 +11,8 @@ app.use(
         credentials: true,
     })
 );
+
+app.use("/auth", authRoutes);
 
 app.get('/', (req, res) => {
     res.send("Server running");
