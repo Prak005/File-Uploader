@@ -104,7 +104,7 @@ function FolderPage() {
                         >
                             <span className="text-base opacity-50">📄</span>
                             <a
-                                href={`http://localhost:3000/${file.path}`}
+                                href={`${import.meta.env.VITE_BASE_URL}/${file.path}`}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="flex-1 text-sm text-zinc-400 hover:text-amber-400 font-medium truncate transition-colors"
