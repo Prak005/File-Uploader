@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 const app = express();
 const authRoutes = require("./routes/authRoutes");
 const folderRoutes = require("./routes/folderRoutes");
@@ -21,6 +22,10 @@ app.use(
 
 app.use(
     session({
+        store: new pgSession({
+            conString: process.env.DATABASE_URL,
+            createTableIfMissing: true,
+        }),
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
