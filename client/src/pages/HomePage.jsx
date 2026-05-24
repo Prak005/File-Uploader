@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function HomePage() {
     const [folders, setFolders] = useState([]);
@@ -25,7 +26,9 @@ function HomePage() {
             const response = await api.post("/folders", { name: folderName });
             setFolders([response.data, ...folders]);
             setFolderName("");
+            toast.success("Folder Created");
         } catch (error) {
+            toast.error("Folder Creation Failed");
             console.log(error);
         }
     }
@@ -34,7 +37,9 @@ function HomePage() {
         try {
             await api.delete(`/folders/${folderId}`);
             fetchFolders();
+            toast.success("Folder Deleted");
         } catch (error) {
+            toast.error("Folder Deletion Failed");
             console.log(error);
         }
     }

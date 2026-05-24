@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import AuthContext from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 function LoginPage() {
     const [username, setUsername] = useState("");
@@ -15,8 +16,10 @@ function LoginPage() {
             const response = await api.post("/auth/login", { username, password });
             const userResponse = await api.get("/auth/me");
             setUser(userResponse.data);
+            toast.success("Login Successful");
             navigate("/");
         } catch (error) {
+            toast.error("Invalid Credentials");
             console.log(error.response.data);
         }
     }

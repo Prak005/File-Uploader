@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
+import toast from "react-hot-toast";
 
 function FolderPage() {
     const { id } = useParams();
@@ -29,7 +30,9 @@ function FolderPage() {
             await api.post(`/folders/${id}/upload`, formData);
             await fetchFolder();
             setSelectedFile(null);
+            toast.success("File Uploaded");
         } catch (error) {
+            toast.error("File Upload Failed");
             console.log(error);
         }
     }
@@ -38,7 +41,9 @@ function FolderPage() {
         try {
             await api.delete(`/folders/files/${fileId}`);
             await fetchFolder();
+            toast.success("File Deleted");
         } catch (error) {
+            toast.error("File Deletion Failed");
             console.log(error);
         }
     }

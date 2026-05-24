@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../api/axios";
+import toast from "react-hot-toast";``
 
 function RegisterPage() {
     const [username, setUsername] = useState("");
@@ -9,8 +10,10 @@ function RegisterPage() {
         e.preventDefault();
         try {
             const response = await api.post("/auth/register", { username, password });
+            toast.success("Registration Successful");
             console.log(response.data);
         } catch (error) {
+            toast.error("Registration Failed");
             console.log(error.response.data);
         }
     }
