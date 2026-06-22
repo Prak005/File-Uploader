@@ -72,7 +72,7 @@ function FolderPage() {
             <p className="text-xs text-amber-400 font-medium tracking-widest uppercase mb-1">Folder</p>
             <h1 className="text-2xl font-bold text-white mb-8">{folder.name}</h1>
 
-            {/* Upload zone */}
+
             <div className="bg-zinc-900 border border-dashed border-zinc-700 rounded-xl p-5 mb-8">
                 <p className="text-xs text-zinc-600 uppercase tracking-wider font-medium mb-3">Upload a file</p>
                 <form onSubmit={handleUpload} className="flex gap-3 items-center flex-wrap">
@@ -84,6 +84,7 @@ function FolderPage() {
                         <input
                             type="file"
                             className="hidden"
+                            disabled={uploading}
                             onChange={(e) => setSelectedFile(e.target.files[0])}
                         />
                     </label>
