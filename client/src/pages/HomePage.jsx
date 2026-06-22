@@ -34,6 +34,8 @@ function HomePage() {
     }
 
     async function handleDeleteFolder(folderId) {
+        const confirmed = window.confirm("Are you sure you want to delete this folder?");
+        if(!confirmed)  return;
         try {
             await api.delete(`/folders/${folderId}`);
             fetchFolders();

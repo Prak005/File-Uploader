@@ -7,6 +7,7 @@ function FolderPage() {
     const { id } = useParams();
     const [folder, setFolder] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
 
     async function fetchFolder() {
         try {
@@ -24,6 +25,7 @@ function FolderPage() {
     async function handleUpload(e) {
         e.preventDefault();
         if (!selectedFile) return;
+        setUploading(true);
         const formData = new FormData();
         formData.append("file", selectedFile);
         try {
@@ -34,10 +36,14 @@ function FolderPage() {
         } catch (error) {
             toast.error("File Upload Failed");
             console.log(error);
+        } finally {
+            setUploading(false);
         }
     }
 
     async function handleDelete(fileId) {
+        const confirmed = window.confirm("Are you sure you want to delete this file?");
+        if(!confirmed)  return;
         try {
             await api.delete(`/folders/files/${fileId}`);
             await fetchFolder();
@@ -79,10 +85,10 @@ function FolderPage() {
                     </label>
                     <button
                         type="submit"
-                        disabled={!selectedFile}
-                        className="bg-amber-400 hover:bg-amber-300 disabled:bg-zinc-800 disabled:text-zinc-600 text-zinc-950 font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors active:scale-[0.98] disabled:cursor-not-allowed"
+                        disabled={!selectedFile || uploading}
+                        className="disabled:opacity-50 disabled:cursor-not-allowed bg-amber-400 hover:bg-amber-300 disabled:bg-zinc-800 disabled:text-zinc-600 text-zinc-950 font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors active:scale-[0.98] disabled:cursor-not-allowed"
                     >
-                        Upload
+                        {uploading ? "Uploading..." : "Upload"}
                     </button>
                 </form>
             </div>
