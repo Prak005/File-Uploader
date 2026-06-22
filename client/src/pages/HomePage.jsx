@@ -22,8 +22,13 @@ function HomePage() {
 
     async function handleCreateFolder(e) {
         e.preventDefault();
+        const trimmedName = folderName.trim();
+        if(!trimmedName){
+            toast.error("Folder Name Required");
+            return;
+        }
         try {
-            const response = await api.post("/folders", { name: folderName });
+            const response = await api.post("/folders", { name: trimmedName });
             setFolders([response.data, ...folders]);
             setFolderName("");
             toast.success("Folder Created");

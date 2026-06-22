@@ -4,9 +4,15 @@ const fs = require("fs");
 async function createFolder(req, res) {
     try {
         const { name } = req.body;
+        const trimmedName = name?.trim();
+        if(!trimmedName){
+            return res.status(400).json({
+                message: "Folder name required",
+            });
+        }
         const folder = await prisma.folder.create({
             data:{
-                name,
+                name: trimmedName,
                 userId: req.user.id,
             },
         });
