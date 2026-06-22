@@ -9,6 +9,7 @@ function FolderPage() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     async function fetchFolder() {
         try {
@@ -30,7 +31,12 @@ function FolderPage() {
         const formData = new FormData();
         formData.append("file", selectedFile);
         try {
-            await api.post(`/folders/${id}/upload`, formData);
+            await api.post(`/folders/${id}/upload`, formData, {
+                onUploadProgress: (progressEvent) => {
+                    const percent = Math.round((progressEvent.loaded*100)/progressEvent.total);
+                    setUploadProgress(percent);
+                },
+            });
             await fetchFolder();
             setSelectedFile(null);
             toast.success("File Uploaded");
@@ -39,6 +45,7 @@ function FolderPage() {
             console.log(error);
         } finally {
             setUploading(false);
+            setUploadProgress(0);
         }
     }
 
@@ -96,6 +103,20 @@ function FolderPage() {
                         {uploading ? "Uploading..." : "Upload"}
                     </button>
                 </form>
+                {uploading && (
+                    <div className="mt-4">
+                        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-amber-400 transition-all duration-200"
+                                style={{ width: `${uploadProgress}%` }}
+                            />
+                        </div>
+
+                        <p className="text-xs text-zinc-500 mt-2">
+                            Uploading... {uploadProgress}%
+                        </p>
+                    </div>
+                )}
             </div>
 
             <p className="text-xs text-zinc-600 uppercase tracking-wider font-medium mb-3 pb-3 border-b border-zinc-800">
@@ -124,10 +145,10 @@ function FolderPage() {
                             </a>
                             <button
                                 onClick={() => handleDelete(file.id)}
-                                disabled={deletingId === fileId}
+                                disabled={deletingId === file.id}
                                 className="text-xs text-zinc-600 hover:text-red-400 px-3 py-1 rounded-md border border-transparent hover:border-red-900 hover:bg-red-950/40 transition-colors"
                             >
-                                {deletingId === fileId ? "Deleting..." : "Delete"}
+                                {deletingId === file.id ? "Deleting..." : "Delete"}
                             </button>
                         </div>
                     ))}
