@@ -5,9 +5,11 @@ import toast from "react-hot-toast";``
 function RegisterPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     async function handleSubmit(e) {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await api.post("/auth/register", { username, password });
             toast.success("Registration Successful");
@@ -15,6 +17,8 @@ function RegisterPage() {
         } catch (error) {
             toast.error("Registration Failed");
             console.log(error.response.data);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -48,9 +52,10 @@ function RegisterPage() {
                     </div>
                     <button
                         type="submit"
+                        disabled={loading}
                         className="mt-1 w-full bg-amber-400 hover:bg-amber-300 text-zinc-950 font-semibold text-sm rounded-lg py-2.5 transition-colors active:scale-[0.98]"
                     >
-                        Register
+                        {loading ? "Creating..." : "Register"}
                     </button>
                 </form>
 
