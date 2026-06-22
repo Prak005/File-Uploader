@@ -3,6 +3,12 @@ import { useParams } from "react-router-dom";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 
+const ALLOWED_TYPES = [
+        "image/png",
+        "image/jpeg",
+        "application/pdf",
+];
+
 function FolderPage() {
     const { id } = useParams();
     const [folder, setFolder] = useState(null);
@@ -27,6 +33,14 @@ function FolderPage() {
     async function handleUpload(e) {
         e.preventDefault();
         if (!selectedFile) return;
+        if(selectedFile.size > 5*1024*1024){
+            toast.error("File Size must be under 5MB");
+            return;
+        }
+        if(!ALLOWED_TYPES.includes(selectedFile.type)){
+            toast.error("Only PNG, JPG, and PDF files are allowed");
+            return;
+        }
         setUploading(true);
         const formData = new FormData();
         formData.append("file", selectedFile);
