@@ -28,13 +28,16 @@ function Navbar() {
             <Link to="/" className="text-sm text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors">
                 Home
             </Link>
-            <Link to="/login" className="text-sm text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors">
-                Login
-            </Link>
-            <Link to="/register" className="text-sm text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors">
-                Register
-            </Link>
-
+            {!user && (
+                <Link to="/login" className="text-sm text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors">
+                    Login
+                </Link>
+            )}
+            {!user && (    
+                <Link to="/register" className="text-sm text-zinc-400 hover:text-white px-3 py-1.5 rounded-md hover:bg-zinc-800 transition-colors">
+                    Register
+                </Link>
+            )}
             {user && (
                 <button
                     onClick={handleLogout}
