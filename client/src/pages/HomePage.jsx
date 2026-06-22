@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 function HomePage() {
     const [folders, setFolders] = useState([]);
     const [folderName, setFolderName] = useState("");
+    const [creating, setCreating] = useState(false);
 
     async function fetchFolders() {
         try {
@@ -27,6 +28,7 @@ function HomePage() {
             toast.error("Folder Name Required");
             return;
         }
+        setCreating(true);
         try {
             const response = await api.post("/folders", { name: trimmedName });
             setFolders([response.data, ...folders]);
@@ -35,6 +37,8 @@ function HomePage() {
         } catch (error) {
             toast.error("Folder Creation Failed");
             console.log(error);
+        } finally {
+            setCreating(false);
         }
     }
 
@@ -68,9 +72,10 @@ function HomePage() {
                 />
                 <button
                     type="submit"
+                    disabled={creating}
                     className="bg-amber-400 hover:bg-amber-300 text-zinc-950 font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors active:scale-[0.98]"
                 >
-                    + Create
+                    {creating ? "Creating..." : "+ Create"}
                 </button>
             </form>
 
