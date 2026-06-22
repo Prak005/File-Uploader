@@ -7,6 +7,7 @@ function FolderPage() {
     const { id } = useParams();
     const [folder, setFolder] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
     const [uploading, setUploading] = useState(false);
 
     async function fetchFolder() {
@@ -44,6 +45,7 @@ function FolderPage() {
     async function handleDelete(fileId) {
         const confirmed = window.confirm("Are you sure you want to delete this file?");
         if(!confirmed)  return;
+        setDeletingId(fileId);
         try {
             await api.delete(`/folders/files/${fileId}`);
             await fetchFolder();
@@ -51,6 +53,8 @@ function FolderPage() {
         } catch (error) {
             toast.error("File Deletion Failed");
             console.log(error);
+        } finally {
+            setDeletingId(null);
         }
     }
 
@@ -119,9 +123,10 @@ function FolderPage() {
                             </a>
                             <button
                                 onClick={() => handleDelete(file.id)}
+                                disabled={deletingId === fileId}
                                 className="text-xs text-zinc-600 hover:text-red-400 px-3 py-1 rounded-md border border-transparent hover:border-red-900 hover:bg-red-950/40 transition-colors"
                             >
-                                Delete
+                                {deletingId === fileId ? "Deleting..." : "Delete"}
                             </button>
                         </div>
                     ))}
