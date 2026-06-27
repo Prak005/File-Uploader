@@ -15,7 +15,7 @@ function RegisterPage() {
             toast.success("Registration Successful");
             console.log(response.data);
         } catch (error) {
-            toast.error("Registration Failed");
+            toast.error(error.response?.data || "Registration Failed");
             console.log(error.response.data);
         } finally {
             setLoading(false);
