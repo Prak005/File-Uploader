@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import AuthContext from "../context/AuthContext";
 
 function HomePage() {
     const [folders, setFolders] = useState([]);
     const [folderName, setFolderName] = useState("");
     const [creating, setCreating] = useState(false);
+    const { user } = useContext(AuthContext);
 
     async function fetchFolders() {
         try {
@@ -18,8 +20,12 @@ function HomePage() {
     }
 
     useEffect(() => {
+        if(!user){
+            setFolders([]);
+            return;
+        }
         fetchFolders();
-    }, []);
+    }, [user]);
 
     async function handleCreateFolder(e) {
         e.preventDefault();
