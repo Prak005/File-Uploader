@@ -1,15 +1,13 @@
 const multer = require("multer");
-const fs = require("fs");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-if (!fs.existsSync("uploads")) {
-    fs.mkdirSync("uploads");
-}
-const storage = multer.diskStorage({
-    destination: function(req, file, cb){
-        cb(null, "uploads/");
-    },
-    filename: function(req, file, cb){
-        cb(null, Date.now() + "-" + file.originalname);
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params:{
+        folder: "file-uploader",
+        resource_type: "auto",
+        allowed_formats: ["jpg", "jpeg", "png", "pdf"],
     },
 });
 
@@ -22,12 +20,12 @@ const upload = multer({
         const allowedTypes = [
             "image/png",
             "image/jpeg",
-            "application/pdf",
+            "application/pdf"
         ];
         if(allowedTypes.includes(file.mimetype)){
             cb(null, true);
         } else {
-            cb(new Error("Invalid file type"));
+            cb(new Error("Invalid File Type"));
         }
     },
 });
