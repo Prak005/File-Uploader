@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma");
+const cloudinary = require("../config/cloudinary");
 
 async function createFolder(req, res) {
     try {
@@ -82,11 +83,13 @@ async function uploadFile(req, res) {
             data:{
                 name: req.file.originalname,
                 path: req.file.path,
+                publicId: req.file.filename,
                 folderId: folder.id,
             },
         });
         res.json(file);
     }catch(error){
+        console.error(error);
         res.status(500).json({
             error:"Failed to upload file",
         });
@@ -97,7 +100,7 @@ async function deleteFile(req, res) {
     try{
         const file = await prisma.file.findFirst({
             where: {
-                id: req.params.id,
+                id: req.params.fileId,
                 folder: {
                     userId: req.user.id,
                 },
@@ -108,6 +111,7 @@ async function deleteFile(req, res) {
                 error: "File not found",
             });
         }
+        await cloudinary.uploader.destroy(file.publicId);
         await prisma.file.delete({
             where:{
                 id: file.id,
@@ -138,6 +142,9 @@ async function deleteFolder(req, res) {
             return res.status(404).json({
                 error:"Folder not found",
             });
+        }
+        for(const file of folder.files){
+            await cloudinary.uploader.destroy(file.publicId);
         }
         await prisma.folder.delete({
             where:{
